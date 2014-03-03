@@ -6,6 +6,12 @@ var reject = require('../utils/promise/reject');
 var resolve = require('../utils/promise/resolve');
 
 //
+/**
+ * Description
+ * @method hoodieConnection
+ * @param {} hoodie
+ * @return
+ */
 function hoodieConnection(hoodie) {
 
   // state
@@ -32,6 +38,11 @@ function hoodieConnection(hoodie) {
   // - triggers `online` event
   // - sets `checkConnectionInterval = 30000`
   //
+  /**
+   * Description
+   * @method checkConnection
+   * @return checkConnectionRequest
+   */
   hoodie.checkConnection = function checkConnection() {
     var req = checkConnectionRequest;
 
@@ -54,6 +65,11 @@ function hoodieConnection(hoodie) {
   // -------------
 
   //
+  /**
+   * Description
+   * @method isConnected
+   * @return online
+   */
   hoodie.isConnected = function isConnected() {
     return online;
   };
@@ -62,6 +78,11 @@ function hoodieConnection(hoodie) {
   //
   //
   //
+  /**
+   * Description
+   * @method handleCheckConnectionSuccess
+   * @return CallExpression
+   */
   function handleCheckConnectionSuccess() {
     checkConnectionInterval = 30000;
 
@@ -79,6 +100,11 @@ function hoodieConnection(hoodie) {
   //
   //
   //
+  /**
+   * Description
+   * @method handleCheckConnectionError
+   * @return CallExpression
+   */
   function handleCheckConnectionError() {
     checkConnectionInterval = 3000;
 
@@ -94,3 +120,4 @@ function hoodieConnection(hoodie) {
 }
 
 module.exports = hoodieConnection;
+

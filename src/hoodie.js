@@ -30,6 +30,12 @@ var util = require('./utils');
 //     // init a new hoodie instance
 //     hoodie = new Hoodie
 //
+/**
+ * Description
+ * @method Hoodie
+ * @param {} baseUrl
+ * @return
+ */
 function Hoodie(baseUrl) {
   var hoodie = this;
 
@@ -49,6 +55,12 @@ function Hoodie(baseUrl) {
   //
   //     hoodie.extend(function(hoodie) {} )
   //
+  /**
+   * Description
+   * @method extend
+   * @param {} extension
+   * @return
+   */
   hoodie.extend = function extend(extension) {
     extension(hoodie);
   };
@@ -165,6 +177,12 @@ function Hoodie(baseUrl) {
 //
 var extensions = [];
 
+/**
+ * Description
+ * @method extend
+ * @param {} extension
+ * @return
+ */
 Hoodie.extend = function(extension) {
   extensions.push(extension);
 };
@@ -172,6 +190,12 @@ Hoodie.extend = function(extension) {
 //
 // detect available extensions and attach to Hoodie Object.
 //
+/**
+ * Description
+ * @method applyExtensions
+ * @param {} hoodie
+ * @return
+ */
 function applyExtensions(hoodie) {
   for (var i = 0; i < extensions.length; i++) {
     extensions[i](hoodie, lib, util);
@@ -179,3 +203,4 @@ function applyExtensions(hoodie) {
 }
 
 module.exports = Hoodie;
+

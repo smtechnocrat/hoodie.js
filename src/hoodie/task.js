@@ -29,9 +29,22 @@ var extend = require('extend');
 var getDefer = require('../utils/promise/defer');
 
 //
+/**
+ * Description
+ * @method hoodieTask
+ * @param {} hoodie
+ * @return
+ */
 function hoodieTask(hoodie) {
 
   // public API
+  /**
+   * Description
+   * @method api
+   * @param {} type
+   * @param {} id
+   * @return CallExpression
+   */
   var api = function api(type, id) {
       return hoodieScopedTask(hoodie, api, {
         type: type,
@@ -53,6 +66,13 @@ function hoodieTask(hoodie) {
   // for an anonymous account in the background. If that fails, the returned
   // promise will be rejected.
   //
+  /**
+   * Description
+   * @method start
+   * @param {} type
+   * @param {} properties
+   * @return CallExpression
+   */
   api.start = function(type, properties) {
     if (hoodie.account.hasAccount()) {
       return hoodie.store.add('$' + type, properties).then(handleNewTask);
@@ -69,6 +89,13 @@ function hoodieTask(hoodie) {
 
   // cancel a running task
   //
+  /**
+   * Description
+   * @method cancel
+   * @param {} type
+   * @param {} id
+   * @return CallExpression
+   */
   api.cancel = function(type, id) {
     return hoodie.store.update('$' + type, id, {
       cancelledAt: now()
@@ -82,7 +109,21 @@ function hoodieTask(hoodie) {
   // first, we try to cancel a running task. If that succeeds, we start
   // a new one with the same properties as the original
   //
+  /**
+   * Description
+   * @method restart
+   * @param {} type
+   * @param {} id
+   * @param {} update
+   * @return CallExpression
+   */
   api.restart = function(type, id, update) {
+    /**
+     * Description
+     * @method start
+     * @param {} object
+     * @return CallExpression
+     */
     var start = function(object) {
       extend(object, update);
       delete object.$error;
@@ -97,6 +138,12 @@ function hoodieTask(hoodie) {
   // -----------
 
   //
+  /**
+   * Description
+   * @method cancelAll
+   * @param {} type
+   * @return CallExpression
+   */
   api.cancelAll = function(type) {
     return findAll(type).then(cancelTaskObjects);
   };
@@ -105,6 +152,13 @@ function hoodieTask(hoodie) {
   // -----------
 
   //
+  /**
+   * Description
+   * @method restartAll
+   * @param {} type
+   * @param {} update
+   * @return CallExpression
+   */
   api.restartAll = function(type, update) {
 
     if (typeof type === 'object') {
@@ -122,12 +176,22 @@ function hoodieTask(hoodie) {
   // we subscribe to all store changes, pipe through the task ones,
   // making a few changes along the way.
   //
+  /**
+   * Description
+   * @method subscribeToOutsideEvents
+   * @return
+   */
   function subscribeToOutsideEvents() {
     // account events
     hoodie.on('store:change', handleStoreChange);
   }
 
   // allow to run this only once from outside (during Hoodie initialization)
+  /**
+   * Description
+   * @method subscribeToOutsideEvents
+   * @return
+   */
   api.subscribeToOutsideEvents = function() {
     subscribeToOutsideEvents();
     delete api.subscribeToOutsideEvents;
@@ -138,6 +202,12 @@ function hoodieTask(hoodie) {
   // -------
 
   //
+  /**
+   * Description
+   * @method handleNewTask
+   * @param {} object
+   * @return CallExpression
+   */
   function handleNewTask(object) {
     var defer = getDefer();
     var taskStore = hoodie.store(object.type, object.id);
@@ -182,6 +252,12 @@ function hoodieTask(hoodie) {
   }
 
   //
+  /**
+   * Description
+   * @method handleCancelledTaskObject
+   * @param {} taskObject
+   * @return CallExpression
+   */
   function handleCancelledTaskObject(taskObject) {
     var defer;
     var type = taskObject.type; // no need to prefix with $, it's already prefixed.
@@ -201,6 +277,14 @@ function hoodieTask(hoodie) {
   }
 
   //
+  /**
+   * Description
+   * @method handleStoreChange
+   * @param {} eventName
+   * @param {} object
+   * @param {} options
+   * @return
+   */
   function handleStoreChange(eventName, object, options) {
     if (object.type[0] !== '$') {
       return;
@@ -211,6 +295,12 @@ function hoodieTask(hoodie) {
   }
 
   //
+  /**
+   * Description
+   * @method findAll
+   * @param {} type
+   * @return CallExpression
+   */
   function findAll(type) {
     var startsWith = '$';
     var filter;
@@ -218,6 +308,11 @@ function hoodieTask(hoodie) {
       startsWith += type;
     }
 
+    /**
+     * Description
+     * @param {} object
+     * @return BinaryExpression
+     */
     filter = function(object) {
       return object.type.indexOf(startsWith) === 0;
     };
@@ -225,6 +320,12 @@ function hoodieTask(hoodie) {
   }
 
   //
+  /**
+   * Description
+   * @method cancelTaskObjects
+   * @param {} taskObjects
+   * @return CallExpression
+   */
   function cancelTaskObjects(taskObjects) {
     return taskObjects.map(function(taskObject) {
       return api.cancel(taskObject.type.substr(1), taskObject.id);
@@ -232,6 +333,13 @@ function hoodieTask(hoodie) {
   }
 
   //
+  /**
+   * Description
+   * @method restartTaskObjects
+   * @param {} taskObjects
+   * @param {} update
+   * @return CallExpression
+   */
   function restartTaskObjects(taskObjects, update) {
     return taskObjects.map(function(taskObject) {
       return api.restart(taskObject.type.substr(1), taskObject.id, update);
@@ -240,6 +348,14 @@ function hoodieTask(hoodie) {
 
   // this is where all the task events get triggered,
   // like add:message, change:message:abc4567, remove, etc.
+  /**
+   * Description
+   * @method triggerEvents
+   * @param {} eventName
+   * @param {} task
+   * @param {} options
+   * @return
+   */
   function triggerEvents(eventName, task, options) {
     var error;
 
@@ -297,6 +413,11 @@ function hoodieTask(hoodie) {
   }
 
   //
+  /**
+   * Description
+   * @method now
+   * @return CallExpression
+   */
   function now() {
     return JSON.stringify(new Date()).replace(/['"]/g, '');
   }
@@ -306,3 +427,4 @@ function hoodieTask(hoodie) {
 }
 
 module.exports = hoodieTask;
+

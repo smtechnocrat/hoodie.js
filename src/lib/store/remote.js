@@ -42,6 +42,20 @@ var generateId = require('../../utils/generate_id');
 var resolveWith = require('../../utils/promise/resolve_with');
 
 //
+/**
+ * Description
+ * @method hoodieRemoteStore
+ * @param {} hoodie
+ * @param {} options
+ * @return remote
+ */
+/**
+ * Description
+ * @method hoodieRemoteStore
+ * @param {} hoodie
+ * @param {} options
+ * @return remote
+ */
 function hoodieRemoteStore(hoodie, options) {
 
   var remoteStore = {};
@@ -50,11 +64,20 @@ function hoodieRemoteStore(hoodie, options) {
   // Remote Store Persistance methods
   // ----------------------------------
 
-  // find
-  // ------
-
-  // find one object
-  //
+  /**
+   * Description find one object
+   * @method find
+   * @param {} type
+   * @param {} id
+   * @return CallExpression
+   */
+  /**
+   * Description
+   * @method find
+   * @param {} type
+   * @param {} id
+   * @return CallExpression
+   */
   remoteStore.find = function find(type, id) {
     var path;
 
@@ -70,11 +93,18 @@ function hoodieRemoteStore(hoodie, options) {
   };
 
 
-  // findAll
-  // ---------
-
-  // find all objects, can be filetered by a type
-  //
+  /**
+   * Description find all objects, can be filetered by a type
+   * @method findAll
+   * @param {} type
+   * @return CallExpression
+   */
+  /**
+   * Description
+   * @method findAll
+   * @param {} type
+   * @return CallExpression
+   */
   remoteStore.findAll = function findAll(type) {
     var endkey, path, startkey;
 
@@ -116,6 +146,18 @@ function hoodieRemoteStore(hoodie, options) {
   // save a new object. If it existed before, all properties
   // will be overwritten
   //
+  /**
+   * Description
+   * @method save
+   * @param {} object
+   * @return CallExpression
+   */
+  /**
+   * Description
+   * @method save
+   * @param {} object
+   * @return CallExpression
+   */
   remoteStore.save = function save(object) {
     var path;
 
@@ -136,6 +178,20 @@ function hoodieRemoteStore(hoodie, options) {
 
   // remove one object
   //
+  /**
+   * Description
+   * @method remove
+   * @param {} type
+   * @param {} id
+   * @return CallExpression
+   */
+  /**
+   * Description
+   * @method remove
+   * @param {} type
+   * @param {} id
+   * @return CallExpression
+   */
   remoteStore.remove = function remove(type, id) {
     return remote.update(type, id, {
       _deleted: true
@@ -148,6 +204,18 @@ function hoodieRemoteStore(hoodie, options) {
 
   // remove all objects, can be filtered by type
   //
+  /**
+   * Description
+   * @method removeAll
+   * @param {} type
+   * @return CallExpression
+   */
+  /**
+   * Description
+   * @method removeAll
+   * @param {} type
+   * @return CallExpression
+   */
   remoteStore.removeAll = function removeAll(type) {
     return remote.updateAll(type, {
       _deleted: true
@@ -226,6 +294,22 @@ function hoodieRemoteStore(hoodie, options) {
   // wrapper for hoodie's request, with some store specific defaults
   // and a prefixed path
   //
+  /**
+   * Description
+   * @method request
+   * @param {} type
+   * @param {} path
+   * @param {} options
+   * @return CallExpression
+   */
+  /**
+   * Description
+   * @method request
+   * @param {} type
+   * @param {} path
+   * @param {} options
+   * @return CallExpression
+   */
   remote.request = function remoteRequest(type, path, options) {
     options = options || {};
 
@@ -253,6 +337,18 @@ function hoodieRemoteStore(hoodie, options) {
 
   // determine between a known and a new object
   //
+  /**
+   * Description
+   * @method isKnownObject
+   * @param {} object
+   * @return
+   */
+  /**
+   * Description
+   * @method isKnownObject
+   * @param {} object
+   * @return
+   */
   remote.isKnownObject = function isKnownObject(object) {
     var key = '' + object.type + '/' + object.id;
 
@@ -267,6 +363,18 @@ function hoodieRemoteStore(hoodie, options) {
 
   // determine between a known and a new object
   //
+  /**
+   * Description
+   * @method markAsKnownObject
+   * @param {} object
+   * @return MemberExpression
+   */
+  /**
+   * Description
+   * @method markAsKnownObject
+   * @param {} object
+   * @return MemberExpression
+   */
   remote.markAsKnownObject = function markAsKnownObject(object) {
     var key = '' + object.type + '/' + object.id;
     knownObjects[key] = 1;
@@ -283,6 +391,18 @@ function hoodieRemoteStore(hoodie, options) {
   // start syncing. `remote.bootstrap()` will automatically start
   // pulling when `remote.connected` remains true.
   //
+  /**
+   * Description
+   * @method connect
+   * @param {} name
+   * @return CallExpression
+   */
+  /**
+   * Description
+   * @method connect
+   * @param {} name
+   * @return CallExpression
+   */
   remote.connect = function connect(name) {
     if (name) {
       remoteName = name;
@@ -300,6 +420,16 @@ function hoodieRemoteStore(hoodie, options) {
 
   // stop syncing changes from remote store
   //
+  /**
+   * Description
+   * @method disconnect
+   * @return
+   */
+  /**
+   * Description
+   * @method disconnect
+   * @return
+   */
   remote.disconnect = function disconnect() {
     remote.connected = false;
     remote.trigger('disconnect'); // TODO: spec that
@@ -318,6 +448,16 @@ function hoodieRemoteStore(hoodie, options) {
   // -------------
 
   //
+  /**
+   * Description
+   * @method isConnected
+   * @return MemberExpression
+   */
+  /**
+   * Description
+   * @method isConnected
+   * @return MemberExpression
+   */
   remote.isConnected = function isConnected() {
     return remote.connected;
   };
@@ -329,6 +469,16 @@ function hoodieRemoteStore(hoodie, options) {
   // returns the sequence number from wich to start to find changes in pull
   //
   var since = options.since || 0; // TODO: spec that!
+  /**
+   * Description
+   * @method getSinceNr
+   * @return since
+   */
+  /**
+   * Description
+   * @method getSinceNr
+   * @return since
+   */
   remote.getSinceNr = function getSinceNr() {
     if (typeof since === 'function') {
       return since();
@@ -346,6 +496,16 @@ function hoodieRemoteStore(hoodie, options) {
   // e.g for a filtered bootstrap.
   //
   var isBootstrapping = false;
+  /**
+   * Description
+   * @method bootstrap
+   * @return CallExpression
+   */
+  /**
+   * Description
+   * @method bootstrap
+   * @return CallExpression
+   */
   remote.bootstrap = function bootstrap() {
     isBootstrapping = true;
     remote.trigger('bootstrap:start');
@@ -361,6 +521,16 @@ function hoodieRemoteStore(hoodie, options) {
   // and restart each 25 seconds.
   //
   var pullRequest, pullRequestTimeout;
+  /**
+   * Description
+   * @method pull
+   * @return CallExpression
+   */
+  /**
+   * Description
+   * @method pull
+   * @return CallExpression
+   */
   remote.pull = function pull() {
     pullRequest = remote.request('GET', pullUrl());
 
@@ -379,6 +549,18 @@ function hoodieRemoteStore(hoodie, options) {
   // Push objects to remote store using the `_bulk_docs` API.
   //
   var pushRequest;
+  /**
+   * Description
+   * @method push
+   * @param {} objects
+   * @return pushRequest
+   */
+  /**
+   * Description
+   * @method push
+   * @param {} objects
+   * @return pushRequest
+   */
   remote.push = function push(objects) {
     var object, objectsForRemote, _i, _len;
 
@@ -420,6 +602,18 @@ function hoodieRemoteStore(hoodie, options) {
 
   // push objects, then pull updates.
   //
+  /**
+   * Description
+   * @method sync
+   * @param {} objects
+   * @return CallExpression
+   */
+  /**
+   * Description
+   * @method sync
+   * @param {} objects
+   * @return CallExpression
+   */
   remote.sync = function sync(objects) {
     return remote.push(objects).then(remote.pull);
   };
@@ -446,11 +640,29 @@ function hoodieRemoteStore(hoodie, options) {
   // this method will be passed. It can be overwritten by passing an
   // array of objects or a function as `options.objects`
   //
+  /**
+   * Description
+   * @method defaultObjectsToPush
+   * @return ArrayExpression
+   */
+  /**
+   * Description
+   * @method defaultObjectsToPush
+   * @return ArrayExpression
+   */
   var defaultObjectsToPush = function defaultObjectsToPush() {
       return [];
     };
   if (options.defaultObjectsToPush) {
     if ($.isArray(options.defaultObjectsToPush)) {
+      /**
+       * Description
+       * @return MemberExpression
+       */
+      /**
+       * Description
+       * @return MemberExpression
+       */
       defaultObjectsToPush = function defaultObjectsToPush() {
         return options.defaultObjectsToPush;
       };
@@ -468,6 +680,18 @@ function hoodieRemoteStore(hoodie, options) {
   // call the function with the seq passed. Otherwise simply set the seq
   // number and return it.
   //
+  /**
+   * Description
+   * @method setSinceNr
+   * @param {} seq
+   * @return since
+   */
+  /**
+   * Description
+   * @method setSinceNr
+   * @param {} seq
+   * @return since
+   */
   function setSinceNr(seq) {
     if (typeof since === 'function') {
       return since(seq);
@@ -487,6 +711,18 @@ function hoodieRemoteStore(hoodie, options) {
   //
   // Also `id` gets replaced with `_id` which consists of type & id
   //
+  /**
+   * Description
+   * @method parseForRemote
+   * @param {} object
+   * @return properties
+   */
+  /**
+   * Description
+   * @method parseForRemote
+   * @param {} object
+   * @return properties
+   */
   function parseForRemote(object) {
     var attr, properties;
     properties = extend({}, object);
@@ -520,6 +756,18 @@ function hoodieRemoteStore(hoodie, options) {
   // renames `_id` attribute to `id` and removes the type from the id,
   // e.g. `type/123` -> `123`
   //
+  /**
+   * Description
+   * @method parseFromRemote
+   * @param {} object
+   * @return object
+   */
+  /**
+   * Description
+   * @method parseFromRemote
+   * @param {} object
+   * @return object
+   */
   function parseFromRemote(object) {
     var id, ignore, _ref;
 
@@ -541,6 +789,18 @@ function hoodieRemoteStore(hoodie, options) {
     return object;
   }
 
+  /**
+   * Description
+   * @method parseAllFromRemote
+   * @param {} objects
+   * @return _results
+   */
+  /**
+   * Description
+   * @method parseAllFromRemote
+   * @param {} objects
+   * @return _results
+   */
   function parseAllFromRemote(objects) {
     var object, _i, _len, _results;
     _results = [];
@@ -556,6 +816,18 @@ function hoodieRemoteStore(hoodie, options) {
 
   // extends passed object with a _rev property
   //
+  /**
+   * Description
+   * @method addRevisionTo
+   * @param {} attributes
+   * @return
+   */
+  /**
+   * Description
+   * @method addRevisionTo
+   * @param {} attributes
+   * @return
+   */
   function addRevisionTo(attributes) {
     var currentRevId, currentRevNr, newRevisionId, _ref;
     try {
@@ -586,6 +858,16 @@ function hoodieRemoteStore(hoodie, options) {
   // ### generate new revision id
 
   //
+  /**
+   * Description
+   * @method generateNewRevisionId
+   * @return CallExpression
+   */
+  /**
+   * Description
+   * @method generateNewRevisionId
+   * @return CallExpression
+   */
   function generateNewRevisionId() {
     return generateId(9);
   }
@@ -594,6 +876,18 @@ function hoodieRemoteStore(hoodie, options) {
   // ### map docs from findAll
 
   //
+  /**
+   * Description
+   * @method mapDocsFromFindAll
+   * @param {} response
+   * @return CallExpression
+   */
+  /**
+   * Description
+   * @method mapDocsFromFindAll
+   * @param {} response
+   * @return CallExpression
+   */
   function mapDocsFromFindAll(response) {
     return response.rows.map(function(row) {
       return row.doc;
@@ -608,6 +902,16 @@ function hoodieRemoteStore(hoodie, options) {
   // not return a longpoll URL, as we want it to finish right away, even if there
   // are no changes on remote.
   //
+  /**
+   * Description
+   * @method pullUrl
+   * @return
+   */
+  /**
+   * Description
+   * @method pullUrl
+   * @return
+   */
   function pullUrl() {
     var since;
     since = remote.getSinceNr();
@@ -623,6 +927,16 @@ function hoodieRemoteStore(hoodie, options) {
 
   // request gets restarted automaticcally
   // when aborted (see handlePullError)
+  /**
+   * Description
+   * @method restartPullRequest
+   * @return
+   */
+  /**
+   * Description
+   * @method restartPullRequest
+   * @return
+   */
   function restartPullRequest() {
     if (pullRequest) {
       pullRequest.abort();
@@ -635,6 +949,18 @@ function hoodieRemoteStore(hoodie, options) {
   // request gets restarted automaticcally
   // when aborted (see handlePullError)
   //
+  /**
+   * Description
+   * @method handlePullSuccess
+   * @param {} response
+   * @return
+   */
+  /**
+   * Description
+   * @method handlePullSuccess
+   * @param {} response
+   * @return
+   */
   function handlePullSuccess(response) {
     setSinceNr(response.last_seq);
     handlePullResults(response.results);
@@ -649,6 +975,20 @@ function hoodieRemoteStore(hoodie, options) {
   // when there is a change, trigger event,
   // then check for another change
   //
+  /**
+   * Description
+   * @method handlePullError
+   * @param {} xhr
+   * @param {} error
+   * @return
+   */
+  /**
+   * Description
+   * @method handlePullError
+   * @param {} xhr
+   * @param {} error
+   * @return
+   */
   function handlePullError(xhr, error) {
     if (!remote.isConnected()) {
       return;
@@ -701,6 +1041,16 @@ function hoodieRemoteStore(hoodie, options) {
 
   // ### handle initial bootstrapping from remote
   //
+  /**
+   * Description
+   * @method handleBootstrapSuccess
+   * @return
+   */
+  /**
+   * Description
+   * @method handleBootstrapSuccess
+   * @return
+   */
   function handleBootstrapSuccess() {
     isBootstrapping = false;
     remote.trigger('bootstrap:end');
@@ -708,6 +1058,18 @@ function hoodieRemoteStore(hoodie, options) {
 
   // ### handle error of initial bootstrapping from remote
   //
+  /**
+   * Description
+   * @method handleBootstrapError
+   * @param {} error
+   * @return
+   */
+  /**
+   * Description
+   * @method handleBootstrapError
+   * @param {} error
+   * @return
+   */
   function handleBootstrapError(error) {
     isBootstrapping = false;
     remote.trigger('bootstrap:error', error);
@@ -715,6 +1077,18 @@ function hoodieRemoteStore(hoodie, options) {
 
   // ### handle changes from remote
   //
+  /**
+   * Description
+   * @method handlePullResults
+   * @param {} changes
+   * @return
+   */
+  /**
+   * Description
+   * @method handlePullResults
+   * @param {} changes
+   * @return
+   */
   function handlePullResults(changes) {
     var doc, event, object, _i, _len;
 
@@ -769,3 +1143,4 @@ function hoodieRemoteStore(hoodie, options) {
 }
 
 module.exports = hoodieRemoteStore;
+

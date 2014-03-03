@@ -14,6 +14,12 @@ var rejectWith = require('../utils/promise/reject_with');
 var resolveWith = require('../utils/promise/resolve_with');
 
 //
+/**
+ * Description
+ * @method hoodieStore
+ * @param {} hoodie
+ * @return
+ */
 function hoodieStore (hoodie) {
 
   var localStore = {};
@@ -57,6 +63,13 @@ function hoodieStore (hoodie) {
   //     store.save('car', undefined, {color: 'red'})
   //     store.save('car', 'abc4567', {color: 'red'})
   //
+  /**
+   * Description
+   * @method save
+   * @param {} object
+   * @param {} options
+   * @return CallExpression
+   */
   localStore.save = function save(object, options) {
     var currentObject, defer, error, event, isNew, key;
 
@@ -156,6 +169,13 @@ function hoodieStore (hoodie) {
   // example usage:
   //
   //     store.find('car', 'abc4567')
+  /**
+   * Description
+   * @method find
+   * @param {} type
+   * @param {} id
+   * @return
+   */
   localStore.find = function(type, id) {
     var error, object;
 
@@ -193,12 +213,22 @@ function hoodieStore (hoodie) {
   //     store.findAll('car')
   //     store.findAll(function(obj) { return obj.brand == 'Tesla' })
   //
+  /**
+   * Description
+   * @method findAll
+   * @param {} filter
+   * @return CallExpression
+   */
   localStore.findAll = function findAll(filter) {
     var currentType, defer, error, id, key, keys, obj, results, type;
 
 
 
     if (filter == null) {
+      /**
+       * Description
+       * @return Literal
+       */
       filter = function() {
         return true;
       };
@@ -215,6 +245,11 @@ function hoodieStore (hoodie) {
     // normalize filter
     if (typeof filter === 'string') {
       type = filter;
+      /**
+       * Description
+       * @param {} obj
+       * @return BinaryExpression
+       */
       filter = function(obj) {
         return obj.type === type;
       };
@@ -273,6 +308,14 @@ function hoodieStore (hoodie) {
   //
   // when object has been synced before, mark it as deleted.
   // Otherwise remove it from Store.
+  /**
+   * Description
+   * @method remove
+   * @param {} type
+   * @param {} id
+   * @param {} options
+   * @return CallExpression
+   */
   localStore.remove = function remove(type, id, options) {
     var key, object, objectWasMarkedAsDeleted;
 
@@ -333,6 +376,13 @@ function hoodieStore (hoodie) {
   //
   // when object has been synced before, mark it as deleted.
   // Otherwise remove it from Store.
+  /**
+   * Description
+   * @method removeAll
+   * @param {} type
+   * @param {} options
+   * @return CallExpression
+   */
   localStore.removeAll = function removeAll(type, options) {
     return store.findAll(type).then(function(objects) {
       var object, _i, _len, results;
@@ -352,6 +402,12 @@ function hoodieStore (hoodie) {
   // ----------
 
   //
+  /**
+   * Description
+   * @method validate
+   * @param {} object
+   * @return
+   */
   function validate (object) {
 
     if (HoodieObjectTypeError.isInvalid(object.type)) {
@@ -396,6 +452,11 @@ function hoodieStore (hoodie) {
 
   // object key index
   // TODO: make this cachy
+  /**
+   * Description
+   * @method index
+   * @return keys
+   */
   store.index = function index() {
     var i, key, keys, _i, _ref;
     keys = [];
@@ -413,6 +474,11 @@ function hoodieStore (hoodie) {
   // -----------------
 
   // returns an Array of all dirty documents
+  /**
+   * Description
+   * @method changedObjects
+   * @return _results
+   */
   store.changedObjects = function changedObjects() {
     var id, key, object, type, _ref, _ref1, _results;
 
@@ -442,6 +508,13 @@ function hoodieStore (hoodie) {
   //
   // Otherwise it returns `true` or `false` for the passed object. An object is dirty
   // if it has no `_syncedAt` attribute or if `updatedAt` is more recent than `_syncedAt`
+  /**
+   * Description
+   * @method hasLocalChanges
+   * @param {} type
+   * @param {} id
+   * @return CallExpression
+   */
   store.hasLocalChanges = function(type, id) {
     if (!type) {
       return !$.isEmptyObject(dirty);
@@ -460,6 +533,11 @@ function hoodieStore (hoodie) {
   // clears localStorage and cache
   // TODO: do not clear entire localStorage, clear only the items that have been stored
   //       using `hoodie.store` before.
+  /**
+   * Description
+   * @method clear
+   * @return CallExpression
+   */
   store.clear = function clear() {
     var defer, key, keys, results;
     defer = getDefer();
@@ -493,6 +571,11 @@ function hoodieStore (hoodie) {
   // returns true if store is currently bootstrapping data from remote,
   // otherwise false.
   var bootstrapping = false;
+  /**
+   * Description
+   * @method isBootstrapping
+   * @return bootstrapping
+   */
   store.isBootstrapping = function isBootstrapping() {
     return bootstrapping;
   };
@@ -507,6 +590,11 @@ function hoodieStore (hoodie) {
   // inspired by this cappuccino commit
   // https://github.com/cappuccino/cappuccino/commit/063b05d9643c35b303568a28809e4eb3224f71ec
   //
+  /**
+   * Description
+   * @method isPersistent
+   * @return Literal
+   */
   store.isPersistent = function isPersistent() {
     try {
 
@@ -549,18 +637,48 @@ function hoodieStore (hoodie) {
   // localStorage proxy
   //
   var db = {
+    /**
+     * Description
+     * @method getItem
+     * @param {} key
+     * @return CallExpression
+     */
     getItem: function(key) {
       return global.localStorage.getItem(key);
     },
+    /**
+     * Description
+     * @method setItem
+     * @param {} key
+     * @param {} value
+     * @return CallExpression
+     */
     setItem: function(key, value) {
       return global.localStorage.setItem(key, value);
     },
+    /**
+     * Description
+     * @method removeItem
+     * @param {} key
+     * @return CallExpression
+     */
     removeItem: function(key) {
       return global.localStorage.removeItem(key);
     },
+    /**
+     * Description
+     * @method key
+     * @param {} nr
+     * @return CallExpression
+     */
     key: function(nr) {
       return global.localStorage.key(nr);
     },
+    /**
+     * Description
+     * @method length
+     * @return MemberExpression
+     */
     length: function() {
       return global.localStorage.length;
     }
@@ -577,6 +695,15 @@ function hoodieStore (hoodie) {
   //
   // Pass `options.remote = true` when object comes from remote
   // Pass 'options.silent = true' to avoid events from being triggered.
+  /**
+   * Description
+   * @method cache
+   * @param {} type
+   * @param {} id
+   * @param {} object
+   * @param {} options
+   * @return CallExpression
+   */
   function cache(type, id, object, options) {
     var key;
 
@@ -654,6 +781,11 @@ function hoodieStore (hoodie) {
   // that removed objects get pushed after
   // page reload.
   //
+  /**
+   * Description
+   * @method bootstrapDirtyObjects
+   * @return
+   */
   function bootstrapDirtyObjects() {
     var id, keys, obj, type, _i, _len, _ref;
     keys = db.getItem('_dirty');
@@ -675,6 +807,11 @@ function hoodieStore (hoodie) {
   //
   // subscribe to events coming from account & our remote store.
   //
+  /**
+   * Description
+   * @method subscribeToOutsideEvents
+   * @return
+   */
   function subscribeToOutsideEvents() {
 
     // account events
@@ -690,6 +827,11 @@ function hoodieStore (hoodie) {
   }
 
   // allow to run this once from outside
+  /**
+   * Description
+   * @method subscribeToOutsideEvents
+   * @return
+   */
   store.subscribeToOutsideEvents = function() {
     subscribeToOutsideEvents();
     delete store.subscribeToOutsideEvents;
@@ -700,6 +842,15 @@ function hoodieStore (hoodie) {
   // Marks object as changed (dirty). Triggers a `store:dirty` event immediately and a
   // `store:idle` event once there is no change within 2 seconds
   //
+  /**
+   * Description
+   * @method markAsChanged
+   * @param {} type
+   * @param {} id
+   * @param {} object
+   * @param {} options
+   * @return
+   */
   function markAsChanged(type, id, object, options) {
     var key;
 
@@ -721,6 +872,13 @@ function hoodieStore (hoodie) {
 
   // removes an object from the list of objects that are flagged to by synched (dirty)
   // and triggers a `store:dirty` event
+  /**
+   * Description
+   * @method clearChanged
+   * @param {} type
+   * @param {} id
+   * @return CallExpression
+   */
   function clearChanged(type, id) {
     var key;
     if (type && id) {
@@ -739,6 +897,11 @@ function hoodieStore (hoodie) {
 
   // Marks all local object as changed (dirty) to make them sync
   // with remote
+  /**
+   * Description
+   * @method markAllAsChanged
+   * @return CallExpression
+   */
   function markAllAsChanged() {
     return store.findAll().pipe(function(objects) {
       var key, object, _i, _len;
@@ -758,6 +921,13 @@ function hoodieStore (hoodie) {
   // when a change come's from our remote store, we differentiate
   // whether an object has been removed or added / updated and
   // reflect the change in our local store.
+  /**
+   * Description
+   * @method handleRemoteChange
+   * @param {} typeOfChange
+   * @param {} object
+   * @return
+   */
   function handleRemoteChange(typeOfChange, object) {
     if (typeOfChange === 'remove') {
       store.remove(object.type, object.id, {
@@ -775,12 +945,26 @@ function hoodieStore (hoodie) {
   //
   // all local changes get bulk pushed. For each object with local
   // changes that has been pushed we trigger a sync event
+  /**
+   * Description
+   * @method handlePushedObject
+   * @param {} object
+   * @return
+   */
   function handlePushedObject(object) {
     triggerEvents('sync', object);
   }
 
 
   // more advanced localStorage wrappers to find/save objects
+  /**
+   * Description
+   * @method setObject
+   * @param {} type
+   * @param {} id
+   * @param {} object
+   * @return CallExpression
+   */
   function setObject(type, id, object) {
     var key, store;
 
@@ -791,6 +975,13 @@ function hoodieStore (hoodie) {
     delete store.id;
     return db.setItem(key, JSON.stringify(store));
   }
+  /**
+   * Description
+   * @method getObject
+   * @param {} type
+   * @param {} id
+   * @return
+   */
   function getObject(type, id) {
     var key, obj;
 
@@ -809,6 +1000,11 @@ function hoodieStore (hoodie) {
 
 
   // store IDs of dirty objects
+  /**
+   * Description
+   * @method saveDirtyIds
+   * @return
+   */
   function saveDirtyIds() {
     try {
       if ($.isEmptyObject(dirty)) {
@@ -821,6 +1017,11 @@ function hoodieStore (hoodie) {
   }
 
   //
+  /**
+   * Description
+   * @method now
+   * @return CallExpression
+   */
   function now() {
     return JSON.stringify(new Date()).replace(/['"]/g, '');
   }
@@ -828,12 +1029,24 @@ function hoodieStore (hoodie) {
 
   // a semantic key consists of a valid type & id, separated by a "/"
   var semanticIdPattern = new RegExp(/^[a-z$][a-z0-9]+\/[a-z0-9]+$/);
+  /**
+   * Description
+   * @method isSemanticKey
+   * @param {} key
+   * @return CallExpression
+   */
   function isSemanticKey(key) {
     return semanticIdPattern.test(key);
   }
 
   // `hasLocalChanges` returns true if there is a local change that
   // has not been sync'd yet.
+  /**
+   * Description
+   * @method hasLocalChanges
+   * @param {} object
+   * @return BinaryExpression
+   */
   function hasLocalChanges(object) {
     if (!object.updatedAt) {
       return false;
@@ -845,12 +1058,26 @@ function hoodieStore (hoodie) {
   }
 
   //
+  /**
+   * Description
+   * @method isMarkedAsDeleted
+   * @param {} object
+   * @return BinaryExpression
+   */
   function isMarkedAsDeleted(object) {
     return object._deleted === true;
   }
 
   // this is where all the store events get triggered,
   // like add:task, change:note:abc4567, remove, etc.
+  /**
+   * Description
+   * @method triggerEvents
+   * @param {} eventName
+   * @param {} object
+   * @param {} options
+   * @return
+   */
   function triggerEvents(eventName, object, options) {
     store.trigger(eventName, extend(true, {}, object), options);
     store.trigger(object.type + ':' + eventName, extend(true, {}, object), options);
@@ -901,6 +1128,11 @@ function hoodieStore (hoodie) {
   //    the `idle` event gets triggered after a short timeout of
   //    no changes, e.g. 2 seconds.
   var dirtyTimeout;
+  /**
+   * Description
+   * @method triggerDirtyAndIdleEvents
+   * @return
+   */
   function triggerDirtyAndIdleEvents() {
     store.trigger('dirty');
     global.clearTimeout(dirtyTimeout);
@@ -911,12 +1143,22 @@ function hoodieStore (hoodie) {
   }
 
   //
+  /**
+   * Description
+   * @method startBootstrappingMode
+   * @return
+   */
   function startBootstrappingMode() {
     bootstrapping = true;
     store.trigger('bootstrap:start');
   }
 
   //
+  /**
+   * Description
+   * @method endBootstrappingMode
+   * @return
+   */
   function endBootstrappingMode() {
     var methodCall, method, args, defer;
 
@@ -933,6 +1175,12 @@ function hoodieStore (hoodie) {
   }
 
   //
+  /**
+   * Description
+   * @method abortBootstrappingMode
+   * @param {} error
+   * @return
+   */
   function abortBootstrappingMode(error) {
     var methodCall, defer;
 
@@ -947,6 +1195,13 @@ function hoodieStore (hoodie) {
   }
 
   //
+  /**
+   * Description
+   * @method enqueue
+   * @param {} method
+   * @param {} args
+   * @return CallExpression
+   */
   function enqueue(method, args) {
     var defer = getDefer();
     queue.push([method, args, defer]);
@@ -956,13 +1211,43 @@ function hoodieStore (hoodie) {
   //
   // patchIfNotPersistant
   //
+  /**
+   * Description
+   * @method patchIfNotPersistant
+   * @return
+   */
   function patchIfNotPersistant () {
     if (!store.isPersistent()) {
       db = {
+        /**
+         * Description
+         * @method getItem
+         * @return Literal
+         */
         getItem: function() { return null; },
+        /**
+         * Description
+         * @method setItem
+         * @return Literal
+         */
         setItem: function() { return null; },
+        /**
+         * Description
+         * @method removeItem
+         * @return Literal
+         */
         removeItem: function() { return null; },
+        /**
+         * Description
+         * @method key
+         * @return Literal
+         */
         key: function() { return null; },
+        /**
+         * Description
+         * @method length
+         * @return Literal
+         */
         length: function() { return 0; }
       };
     }
@@ -986,12 +1271,22 @@ function hoodieStore (hoodie) {
   hoodie.store = store;
 
   // allow to run this once from outside
+  /**
+   * Description
+   * @method bootstrapDirtyObjects
+   * @return
+   */
   store.bootstrapDirtyObjects = function() {
     bootstrapDirtyObjects();
     delete store.bootstrapDirtyObjects;
   };
 
   // allow to run this once from outside
+  /**
+   * Description
+   * @method patchIfNotPersistant
+   * @return
+   */
   store.patchIfNotPersistant = function() {
     patchIfNotPersistant();
     delete store.patchIfNotPersistant;
@@ -999,3 +1294,4 @@ function hoodieStore (hoodie) {
 }
 
 module.exports = hoodieStore;
+

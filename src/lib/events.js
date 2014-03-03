@@ -14,6 +14,13 @@
 // callbacks are global, while the events API is used at several places,
 // like hoodie.on / hoodie.store.on / hoodie.task.on etc.
 //
+/**
+ * Description
+ * @method hoodieEvents
+ * @param {} hoodie
+ * @param {} options
+ * @return
+ */
 function hoodieEvents(hoodie, options) {
   var context = hoodie;
   var namespace = '';
@@ -38,6 +45,13 @@ function hoodieEvents(hoodie, options) {
   //
   //     object.bind 'cheat', blame
   //
+  /**
+   * Description
+   * @method bind
+   * @param {} ev
+   * @param {} callback
+   * @return
+   */
   function bind(ev, callback) {
     var evs, name, _i, _len;
 
@@ -57,8 +71,20 @@ function hoodieEvents(hoodie, options) {
   //
   //     object.one 'groundTouch', gameOver
   //
+  /**
+   * Description
+   * @method one
+   * @param {} ev
+   * @param {} callback
+   * @return
+   */
   function one(ev, callback) {
     ev = namespace + ev;
+    /**
+     * Description
+     * @method wrapper
+     * @return
+     */
     var wrapper = function() {
         hoodie.unbind(ev, wrapper);
         callback.apply(null, arguments);
@@ -72,6 +98,11 @@ function hoodieEvents(hoodie, options) {
   // trigger an event and pass optional parameters for binding.
   //     object.trigger 'win', score: 1230
   //
+  /**
+   * Description
+   * @method trigger
+   * @return Literal
+   */
   function trigger() {
     var args, callback, ev, list, _i, _len;
 
@@ -102,6 +133,13 @@ function hoodieEvents(hoodie, options) {
   //     object.unbind 'move'
   //     object.unbind 'move', follow
   //
+  /**
+   * Description
+   * @method unbind
+   * @param {} ev
+   * @param {} callback
+   * @return
+   */
   function unbind(ev, callback) {
     var cb, i, list, _i, _len, evNames;
 
@@ -160,3 +198,4 @@ function hoodieEvents(hoodie, options) {
 }
 
 module.exports = hoodieEvents;
+

@@ -7,6 +7,14 @@
 var hoodieEvents = require('../events');
 
 //
+/**
+ * Description
+ * @method hoodieScopedStoreApi
+ * @param {} hoodie
+ * @param {} storeApi
+ * @param {} options
+ * @return api
+ */
 function hoodieScopedStoreApi(hoodie, storeApi, options) {
 
   // name
@@ -26,46 +34,108 @@ function hoodieScopedStoreApi(hoodie, storeApi, options) {
     });
 
     //
+    /**
+     * Description
+     * @method save
+     * @param {} id
+     * @param {} properties
+     * @param {} options
+     * @return CallExpression
+     */
     api.save = function save(id, properties, options) {
       return storeApi.save(type, id, properties, options);
     };
 
     //
+    /**
+     * Description
+     * @method add
+     * @param {} properties
+     * @param {} options
+     * @return CallExpression
+     */
     api.add = function add(properties, options) {
       return storeApi.add(type, properties, options);
     };
 
     //
+    /**
+     * Description
+     * @method find
+     * @param {} id
+     * @return CallExpression
+     */
     api.find = function find(id) {
       return storeApi.find(type, id);
     };
 
     //
+    /**
+     * Description
+     * @method findOrAdd
+     * @param {} id
+     * @param {} properties
+     * @return CallExpression
+     */
     api.findOrAdd = function findOrAdd(id, properties) {
       return storeApi.findOrAdd(type, id, properties);
     };
 
     //
+    /**
+     * Description
+     * @method findAll
+     * @param {} options
+     * @return CallExpression
+     */
     api.findAll = function findAll(options) {
       return storeApi.findAll(type, options);
     };
 
     //
+    /**
+     * Description
+     * @method update
+     * @param {} id
+     * @param {} objectUpdate
+     * @param {} options
+     * @return CallExpression
+     */
     api.update = function update(id, objectUpdate, options) {
       return storeApi.update(type, id, objectUpdate, options);
     };
 
     //
+    /**
+     * Description
+     * @method updateAll
+     * @param {} objectUpdate
+     * @param {} options
+     * @return CallExpression
+     */
     api.updateAll = function updateAll(objectUpdate, options) {
       return storeApi.updateAll(type, objectUpdate, options);
     };
 
     //
+    /**
+     * Description
+     * @method remove
+     * @param {} id
+     * @param {} options
+     * @return CallExpression
+     */
     api.remove = function remove(id, options) {
       return storeApi.remove(type, id, options);
     };
 
     //
+    /**
+     * Description
+     * @method removeAll
+     * @param {} options
+     * @return CallExpression
+     */
     api.removeAll = function removeAll(options) {
       return storeApi.removeAll(type, options);
     };
@@ -81,21 +151,46 @@ function hoodieScopedStoreApi(hoodie, storeApi, options) {
     });
 
     //
+    /**
+     * Description
+     * @method save
+     * @param {} properties
+     * @param {} options
+     * @return CallExpression
+     */
     api.save = function save(properties, options) {
       return storeApi.save(type, id, properties, options);
     };
 
     //
+    /**
+     * Description
+     * @method find
+     * @return CallExpression
+     */
     api.find = function find() {
       return storeApi.find(type, id);
     };
 
     //
+    /**
+     * Description
+     * @method update
+     * @param {} objectUpdate
+     * @param {} options
+     * @return CallExpression
+     */
     api.update = function update(objectUpdate, options) {
       return storeApi.update(type, id, objectUpdate, options);
     };
 
     //
+    /**
+     * Description
+     * @method remove
+     * @param {} options
+     * @return CallExpression
+     */
     api.remove = function remove(options) {
       return storeApi.remove(type, id, options);
     };
@@ -109,3 +204,4 @@ function hoodieScopedStoreApi(hoodie, storeApi, options) {
 }
 
 module.exports = hoodieScopedStoreApi;
+

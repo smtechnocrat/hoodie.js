@@ -12,6 +12,12 @@ var rejectWith = require('../utils/promise/reject_with');
 var resolveWith = require('../utils/promise/resolve_with');
 
 //
+/**
+ * Description
+ * @method hoodieAccount
+ * @param {} hoodie
+ * @return
+ */
 function hoodieAccount(hoodie) {
   // public API
   var account = {};
@@ -41,6 +47,11 @@ function hoodieAccount(hoodie) {
   // Use this method to assure that the user is authenticated:
   // `hoodie.account.authenticate().done( doSomething ).fail( handleError )`
   //
+  /**
+   * Description
+   * @method authenticate
+   * @return CallExpression
+   */
   account.authenticate = function authenticate() {
     var sendAndHandleAuthRequest;
 
@@ -78,6 +89,10 @@ function hoodieAccount(hoodie) {
     // send request to check for session status. If there is a
     // pending request already, return its promise.
     //
+    /**
+     * Description
+     * @return CallExpression
+     */
     sendAndHandleAuthRequest = function() {
       return account.request('GET', '/_session').then(
       handleAuthenticateRequestSuccess);
@@ -93,6 +108,11 @@ function hoodieAccount(hoodie) {
   // returns true if the user is currently signed but has no valid session,
   // meaning that the data cannot be synchronized.
   //
+  /**
+   * Description
+   * @method hasValidSession
+   * @return BinaryExpression
+   */
   account.hasValidSession = function() {
     if (!account.hasAccount()) {
       return false;
@@ -108,6 +128,11 @@ function hoodieAccount(hoodie) {
   // returns true if the user is currently signed but has no valid session,
   // meaning that the data cannot be synchronized.
   //
+  /**
+   * Description
+   * @method hasInvalidSession
+   * @return BinaryExpression
+   */
   account.hasInvalidSession = function() {
     if (!account.hasAccount()) {
       return false;
@@ -126,6 +151,13 @@ function hoodieAccount(hoodie) {
   // user doc. The account confirmation might take a while, so we keep trying
   // to sign in with a 300ms timeout.
   //
+  /**
+   * Description
+   * @method signUp
+   * @param {} username
+   * @param {} password
+   * @return CallExpression
+   */
   account.signUp = function signUp(username, password) {
 
     if (password === undefined) {
@@ -179,6 +211,11 @@ function hoodieAccount(hoodie) {
   // If the user signes up for real later, we 'upgrade' his account, meaning we
   // change his username and password internally instead of creating another user.
   //
+  /**
+   * Description
+   * @method anonymousSignUp
+   * @return CallExpression
+   */
   account.anonymousSignUp = function anonymousSignUp() {
     var password, username;
 
@@ -196,6 +233,11 @@ function hoodieAccount(hoodie) {
   // ---------------------
 
   //
+  /**
+   * Description
+   * @method hasAccount
+   * @return UnaryExpression
+   */
   account.hasAccount = function hasAccount() {
     return !!account.username;
   };
@@ -213,6 +255,11 @@ function hoodieAccount(hoodie) {
   // To determine between anonymous and "real" accounts, we
   // can compare the username to the hoodie.id, which is the
   // same for anonymous accounts.
+  /**
+   * Description
+   * @method hasAnonymousAccount
+   * @return BinaryExpression
+   */
   account.hasAnonymousAccount = function hasAnonymousAccount() {
     return account.username === hoodie.id();
   };
@@ -224,14 +271,30 @@ function hoodieAccount(hoodie) {
   //
   var anonymousPasswordKey = '_account.anonymousPassword';
 
+  /**
+   * Description
+   * @method setAnonymousPassword
+   * @param {} password
+   * @return CallExpression
+   */
   function setAnonymousPassword(password) {
     return hoodie.config.set(anonymousPasswordKey, password);
   }
 
+  /**
+   * Description
+   * @method getAnonymousPassword
+   * @return CallExpression
+   */
   function getAnonymousPassword() {
     return hoodie.config.get(anonymousPasswordKey);
   }
 
+  /**
+   * Description
+   * @method removeAnonymousPassword
+   * @return CallExpression
+   */
   function removeAnonymousPassword() {
     return hoodie.config.unset(anonymousPasswordKey);
   }
@@ -252,7 +315,20 @@ function hoodieAccount(hoodie) {
   // To prevent data loss, signIn can be called with options.moveData = true, that wll
   // move all data from the anonymous account to the account the user signed into.
   //
+  /**
+   * Description
+   * @method signIn
+   * @param {} username
+   * @param {} password
+   * @param {} options
+   * @return
+   */
   account.signIn = function signIn(username, password, options) {
+    /**
+     * Description
+     * @method signOutAndSignIn
+     * @return CallExpression
+     */
     var signOutAndSignIn = function() {
         return account.signOut({
           silent: true
@@ -310,6 +386,12 @@ function hoodieAccount(hoodie) {
 
   // uses standard CouchDB API to invalidate a user session (DELETE /_session)
   //
+  /**
+   * Description
+   * @method signOut
+   * @param {} options
+   * @return CallExpression
+   */
   account.signOut = function signOut(options) {
 
     options = options || {};
@@ -331,6 +413,14 @@ function hoodieAccount(hoodie) {
 
   // shortcut
   //
+  /**
+   * Description
+   * @method request
+   * @param {} type
+   * @param {} path
+   * @param {} options
+   * @return CallExpression
+   */
   account.request = function accountRequest(type, path, options) {
     options = options || {};
     return hoodie.request.apply(hoodie, arguments);
@@ -342,6 +432,11 @@ function hoodieAccount(hoodie) {
 
   // return name of db
   //
+  /**
+   * Description
+   * @method db
+   * @return BinaryExpression
+   */
   account.db = function db() {
     return 'user/' + hoodie.id();
   };
@@ -352,6 +447,12 @@ function hoodieAccount(hoodie) {
 
   // fetches _users doc from CouchDB and caches it in _doc
   //
+  /**
+   * Description
+   * @method fetch
+   * @param {} username
+   * @return CallExpression
+   */
   account.fetch = function fetch(username) {
 
     if (username === undefined) {
@@ -381,6 +482,13 @@ function hoodieAccount(hoodie) {
   // but couchDb doesn't require it for a password change, so it's ignored
   // in this implementation of the hoodie API.
   //
+  /**
+   * Description
+   * @method changePassword
+   * @param {} currentPassword
+   * @param {} newPassword
+   * @return CallExpression
+   */
   account.changePassword = function changePassword(currentPassword, newPassword) {
 
     if (!account.username) {
@@ -408,6 +516,12 @@ function hoodieAccount(hoodie) {
   // It will be picked up by the password reset worker and removeed
   // once the password was resetted.
   //
+  /**
+   * Description
+   * @method resetPassword
+   * @param {} username
+   * @return CallExpression
+   */
   account.resetPassword = function resetPassword(username) {
     var data, key, options, resetPasswordId;
 
@@ -458,6 +572,11 @@ function hoodieAccount(hoodie) {
   // Once called, it continues to request the status update with a
   // one second timeout.
   //
+  /**
+   * Description
+   * @method checkPasswordReset
+   * @return CallExpression
+   */
   account.checkPasswordReset = function checkPasswordReset() {
     var hash, options, resetPasswordId, url, username;
 
@@ -502,6 +621,13 @@ function hoodieAccount(hoodie) {
   //
   // But the current password is needed to login with the new username.
   //
+  /**
+   * Description
+   * @method changeUsername
+   * @param {} currentPassword
+   * @param {} newUsername
+   * @return CallExpression
+   */
   account.changeUsername = function changeUsername(currentPassword, newUsername) {
     newUsername = newUsername || '';
     return changeUsernameAndPassword(currentPassword, newUsername.toLowerCase());
@@ -513,6 +639,11 @@ function hoodieAccount(hoodie) {
 
   // destroys a user's account
   //
+  /**
+   * Description
+   * @method destroy
+   * @return CallExpression
+   */
   account.destroy = function destroy() {
     if (!account.hasAccount()) {
       return cleanupAndTriggerSignOut();
@@ -526,11 +657,21 @@ function hoodieAccount(hoodie) {
   //
   // subscribe to events coming outside
   //
+  /**
+   * Description
+   * @method subscribeToOutsideEvents
+   * @return
+   */
   function subscribeToOutsideEvents() {
     hoodie.on('remote:error:unauthenticated', reauthenticate);
   }
 
   // allow to run this once from outside
+  /**
+   * Description
+   * @method subscribeToOutsideEvents
+   * @return
+   */
   account.subscribeToOutsideEvents = function() {
     subscribeToOutsideEvents();
     delete account.subscribeToOutsideEvents;
@@ -541,12 +682,23 @@ function hoodieAccount(hoodie) {
   // ---------
 
   // reauthenticate: force hoodie to reauthenticate
+  /**
+   * Description
+   * @method reauthenticate
+   * @return CallExpression
+   */
   function reauthenticate() {
     authenticated = undefined;
     return account.authenticate();
   }
 
   // setters
+  /**
+   * Description
+   * @method setUsername
+   * @param {} newUsername
+   * @return CallExpression
+   */
   function setUsername(newUsername) {
     if (account.username === newUsername) {
       return;
@@ -572,6 +724,12 @@ function hoodieAccount(hoodie) {
   // users, the password is stored in local store, so we don't need
   // to trigger an 'unauthenticated' error, but instead try to sign in.
   //
+  /**
+   * Description
+   * @method handleAuthenticateRequestSuccess
+   * @param {} response
+   * @return CallExpression
+   */
   function handleAuthenticateRequestSuccess(response) {
     if (response.userCtx.name) {
       authenticated = true;
@@ -598,6 +756,13 @@ function hoodieAccount(hoodie) {
   //         'rev': '1-e8747d9ae9776706da92810b1baa4248'
   //     }
   //
+  /**
+   * Description
+   * @method handleSignUpSuccess
+   * @param {} username
+   * @param {} password
+   * @return FunctionExpression
+   */
   function handleSignUpSuccess(username, password) {
 
     return function(response) {
@@ -618,6 +783,12 @@ function hoodieAccount(hoodie) {
   //         "name": "HoodieConflictError",
   //         "message": "Object already exists."
   //     }
+  /**
+   * Description
+   * @method handleSignUpError
+   * @param {} username
+   * @return FunctionExpression
+   */
   function handleSignUpError(username) {
 
     return function(error) {
@@ -633,6 +804,15 @@ function hoodieAccount(hoodie) {
   // a delayed sign in is used after sign up and after a
   // username change.
   //
+  /**
+   * Description
+   * @method delayedSignIn
+   * @param {} username
+   * @param {} password
+   * @param {} options
+   * @param {} defer
+   * @return CallExpression
+   */
   function delayedSignIn(username, password, options, defer) {
 
     // delayedSignIn might call itself, when the user account
@@ -678,6 +858,12 @@ function hoodieAccount(hoodie) {
   // we want to turn it into 'test1', 'mvu85hy' or reject the promise
   // in case an error occured ('roles' array contains 'error')
   //
+  /**
+   * Description
+   * @method handleSignInSuccess
+   * @param {} options
+   * @return FunctionExpression
+   */
   function handleSignInSuccess(options) {
     options = options || {};
 
@@ -752,6 +938,12 @@ function hoodieAccount(hoodie) {
   // error, indicating that our password was changed and our
   // current session has been invalidated
   //
+  /**
+   * Description
+   * @method handlePasswordResetStatusRequestSuccess
+   * @param {} passwordResetObject
+   * @return CallExpression
+   */
   function handlePasswordResetStatusRequestSuccess(passwordResetObject) {
     var error;
 
@@ -773,6 +965,12 @@ function hoodieAccount(hoodie) {
   // If the error is a 401, it's exactly what we've been waiting for.
   // In this case we resolve the promise.
   //
+  /**
+   * Description
+   * @method handlePasswordResetStatusRequestError
+   * @param {} error
+   * @return
+   */
   function handlePasswordResetStatusRequestError(error) {
     if (error.name === 'HoodieUnauthorizedError') {
       hoodie.config.unset('_account.resetPasswordId');
@@ -789,6 +987,11 @@ function hoodieAccount(hoodie) {
   // wait until a password reset gets either completed or marked as failed
   // and resolve / reject respectively
   //
+  /**
+   * Description
+   * @method awaitPasswordResetResult
+   * @return CallExpression
+   */
   function awaitPasswordResetResult() {
     var defer = getDefer();
 
@@ -809,6 +1012,12 @@ function hoodieAccount(hoodie) {
   //
   // when a password reset fails, remove it from /_users
   //
+  /**
+   * Description
+   * @method removePasswordResetObject
+   * @param {} error
+   * @return
+   */
   function removePasswordResetObject (error) {
     var passwordResetObject = error.object;
 
@@ -841,6 +1050,14 @@ function hoodieAccount(hoodie) {
   // 2. update _users doc with new username and new password (if provided)
   // 3. sign in with new credentials to create new sesion.
   //
+  /**
+   * Description
+   * @method changeUsernameAndPassword
+   * @param {} currentPassword
+   * @param {} newUsername
+   * @param {} newPassword
+   * @return CallExpression
+   */
   function changeUsernameAndPassword(currentPassword, newUsername, newPassword) {
 
     return sendSignInRequest(account.username, currentPassword, {
@@ -855,6 +1072,13 @@ function hoodieAccount(hoodie) {
   //
   // turn an anonymous account into a real account
   //
+  /**
+   * Description
+   * @method upgradeAnonymousAccount
+   * @param {} username
+   * @param {} password
+   * @return CallExpression
+   */
   function upgradeAnonymousAccount(username, password) {
     var currentPassword = getAnonymousPassword();
 
@@ -869,6 +1093,11 @@ function hoodieAccount(hoodie) {
   // we now can be sure that we fetched the latest _users doc, so we can update it
   // without a potential conflict error.
   //
+  /**
+   * Description
+   * @method handleFetchBeforeDestroySuccess
+   * @return CallExpression
+   */
   function handleFetchBeforeDestroySuccess() {
 
     hoodie.remote.disconnect();
@@ -891,6 +1120,12 @@ function hoodieAccount(hoodie) {
   // still want to finish the destroy locally, so we return a
   // resolved promise
   //
+  /**
+   * Description
+   * @method handleFetchBeforeDestroyError
+   * @param {} error
+   * @return
+   */
   function handleFetchBeforeDestroyError(error) {
     if (error.name === 'HoodieNotFoundError') {
       return resolve();
@@ -902,6 +1137,11 @@ function hoodieAccount(hoodie) {
   //
   // remove everything form the current account, so a new account can be initiated.
   //
+  /**
+   * Description
+   * @method cleanup
+   * @return CallExpression
+   */
   function cleanup() {
 
     // allow other modules to clean up local data & caches
@@ -914,6 +1154,11 @@ function hoodieAccount(hoodie) {
 
 
   //
+  /**
+   * Description
+   * @method cleanupAndTriggerSignOut
+   * @return CallExpression
+   */
   function cleanupAndTriggerSignOut() {
     return cleanup().then(function() {
       return account.trigger('signout');
@@ -931,6 +1176,12 @@ function hoodieAccount(hoodie) {
   // is used within `signUp` method, so we need to be able to differentiate
   // between anonymous and normal users before an account has been created.
   //
+  /**
+   * Description
+   * @method userTypeAndId
+   * @param {} username
+   * @return BinaryExpression
+   */
   function userTypeAndId(username) {
     var type;
 
@@ -946,6 +1197,12 @@ function hoodieAccount(hoodie) {
   //
   // turn a username into a valid _users doc._id
   //
+  /**
+   * Description
+   * @method userDocKey
+   * @param {} username
+   * @return BinaryExpression
+   */
   function userDocKey(username) {
     username = username || account.username;
     return '' + userDocPrefix + ':' + (userTypeAndId(username));
@@ -954,6 +1211,12 @@ function hoodieAccount(hoodie) {
   //
   // get URL of my _users doc
   //
+  /**
+   * Description
+   * @method userDocUrl
+   * @param {} username
+   * @return BinaryExpression
+   */
   function userDocUrl(username) {
     return '/_users/' + (encodeURIComponent(userDocKey(username)));
   }
@@ -970,6 +1233,14 @@ function hoodieAccount(hoodie) {
   // from _users doc and add the password in clear text. CouchDB will replace it with
   // according password_sha and a new salt server side
   //
+  /**
+   * Description
+   * @method sendChangeUsernameAndPasswordRequest
+   * @param {} currentPassword
+   * @param {} newUsername
+   * @param {} newPassword
+   * @return FunctionExpression
+   */
   function sendChangeUsernameAndPasswordRequest(currentPassword, newUsername, newPassword) {
 
     return function() {
@@ -1009,6 +1280,13 @@ function hoodieAccount(hoodie) {
   // depending on whether a newUsername has been passed, we can sign in right away
   // or have to wait until the worker removed the old account
   //
+  /**
+   * Description
+   * @method handleChangeUsernameAndPasswordResponse
+   * @param {} newUsername
+   * @param {} newPassword
+   * @return FunctionExpression
+   */
   function handleChangeUsernameAndPasswordResponse(newUsername, newPassword) {
 
     return function() {
@@ -1029,6 +1307,14 @@ function hoodieAccount(hoodie) {
   //
   // keep sending sign in requests until the server returns a 401
   //
+  /**
+   * Description
+   * @method awaitCurrentAccountRemoved
+   * @param {} username
+   * @param {} password
+   * @param {} defer
+   * @return CallExpression
+   */
   function awaitCurrentAccountRemoved(username, password, defer) {
     if (!defer) {
       defer = getDefer();
@@ -1061,6 +1347,13 @@ function hoodieAccount(hoodie) {
   // make sure that the same request doesn't get sent twice
   // by cancelling the previous one.
   //
+  /**
+   * Description
+   * @method withPreviousRequestsAborted
+   * @param {} name
+   * @param {} requestFunction
+   * @return MemberExpression
+   */
   function withPreviousRequestsAborted(name, requestFunction) {
     if (requests[name] !== undefined) {
       if (typeof requests[name].abort === 'function') {
@@ -1076,6 +1369,13 @@ function hoodieAccount(hoodie) {
   // if there is a pending request, return its promise instead
   // of sending another request
   //
+  /**
+   * Description
+   * @method withSingleRequest
+   * @param {} name
+   * @param {} requestFunction
+   * @return MemberExpression
+   */
   function withSingleRequest(name, requestFunction) {
 
     if (requests[name] !== undefined) {
@@ -1095,6 +1395,12 @@ function hoodieAccount(hoodie) {
   // push local changes when user signs out, unless he enforces sign out
   // in any case with `{ignoreLocalChanges: true}`
   //
+  /**
+   * Description
+   * @method pushLocalChanges
+   * @param {} options
+   * @return CallExpression
+   */
   function pushLocalChanges(options) {
     if (hoodie.store.hasLocalChanges() && !options.ignoreLocalChanges) {
       return hoodie.remote.push();
@@ -1103,6 +1409,11 @@ function hoodieAccount(hoodie) {
   }
 
   //
+  /**
+   * Description
+   * @method sendSignOutRequest
+   * @return CallExpression
+   */
   function sendSignOutRequest() {
     return withSingleRequest('signOut', function() {
       return account.request('DELETE', '/_session');
@@ -1120,6 +1431,14 @@ function hoodieAccount(hoodie) {
   // request but without a signOut beforehand, as the user remains
   // the same.
   //
+  /**
+   * Description
+   * @method sendSignInRequest
+   * @param {} username
+   * @param {} password
+   * @param {} options
+   * @return CallExpression
+   */
   function sendSignInRequest(username, password, options) {
     var requestOptions = {
       data: {
@@ -1137,6 +1456,11 @@ function hoodieAccount(hoodie) {
   }
 
   //
+  /**
+   * Description
+   * @method now
+   * @return NewExpression
+   */
   function now() {
     return new Date();
   }
@@ -1148,3 +1472,4 @@ function hoodieAccount(hoodie) {
 }
 
 module.exports = hoodieAccount;
+

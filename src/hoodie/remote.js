@@ -9,16 +9,22 @@
 // When hoodie.remote is continuously syncing (default),
 // it will continuously  synchronize with local store,
 // otherwise sync, pull or push can be called manually
-// 
+//
 // Note that hoodieRemote must be initialized before the
 // API is available:
-// 
+//
 //     hoodieRemote(hoodie);
 //     hoodie.remote.init();
 //
 
 var rejectWith = require('../utils/promise/reject_with');
 
+/**
+ * Description
+ * @method hoodieRemote
+ * @param {} hoodie
+ * @return
+ */
 function hoodieRemote (hoodie) {
   // inherit from Hoodies Store API
   var remote = hoodie.open(hoodie.account.db(), {
@@ -51,6 +57,11 @@ function hoodieRemote (hoodie) {
   // name for remote (current user's database name)
   //
   var originalConnectMethod = remote.connect;
+  /**
+   * Description
+   * @method connect
+   * @return CallExpression
+   */
   remote.connect = function connect() {
     if (! hoodie.account.hasAccount() ) {
       return rejectWith('User has no database to connect to');
@@ -62,6 +73,11 @@ function hoodieRemote (hoodie) {
   // ---------
 
   // proxies to hoodie.trigger
+  /**
+   * Description
+   * @method trigger
+   * @return CallExpression
+   */
   remote.trigger = function trigger() {
     var eventName;
 
@@ -77,6 +93,13 @@ function hoodieRemote (hoodie) {
   // ---------
 
   // proxies to hoodie.on
+  /**
+   * Description
+   * @method on
+   * @param {} eventName
+   * @param {} data
+   * @return CallExpression
+   */
   remote.on = function on(eventName, data) {
     eventName = eventName.replace(/(^| )([^ ]+)/g, '$1'+'remote:$2');
     return hoodie.on(eventName, data);
@@ -87,6 +110,13 @@ function hoodieRemote (hoodie) {
   // ---------
 
   // proxies to hoodie.unbind
+  /**
+   * Description
+   * @method unbind
+   * @param {} eventName
+   * @param {} callback
+   * @return CallExpression
+   */
   remote.unbind = function unbind(eventName, callback) {
     eventName = eventName.replace(/(^| )([^ ]+)/g, '$1'+'remote:$2');
     return hoodie.unbind(eventName, callback);
@@ -98,6 +128,12 @@ function hoodieRemote (hoodie) {
 
   // getter / setter for since number
   //
+  /**
+   * Description
+   * @method sinceNrCallback
+   * @param {} sinceNr
+   * @return LogicalExpression
+   */
   function sinceNrCallback(sinceNr) {
     if (sinceNr) {
       return hoodie.config.set('_remote.since', sinceNr);
@@ -109,6 +145,11 @@ function hoodieRemote (hoodie) {
   //
   // subscribe to events coming from outside
   //
+  /**
+   * Description
+   * @method subscribeToOutsideEvents
+   * @return
+   */
   function subscribeToOutsideEvents() {
 
     hoodie.on('remote:connect', function() {
@@ -132,6 +173,11 @@ function hoodieRemote (hoodie) {
   }
 
   // allow to run this once from outside
+  /**
+   * Description
+   * @method subscribeToOutsideEvents
+   * @return
+   */
   remote.subscribeToOutsideEvents = function() {
     subscribeToOutsideEvents();
     delete remote.subscribeToOutsideEvents;
@@ -143,8 +189,19 @@ function hoodieRemote (hoodie) {
   hoodie.remote = remote;
 }
 
+/**
+ * Description
+ * @method hoodieRemoteFactory
+ * @param {} hoodie
+ * @return
+ */
 function hoodieRemoteFactory(hoodie) {
 
+  /**
+   * Description
+   * @method init
+   * @return
+   */
   var init = function() {
     hoodieRemote(hoodie);
   };
@@ -155,3 +212,4 @@ function hoodieRemoteFactory(hoodie) {
 }
 
 module.exports = hoodieRemoteFactory;
+

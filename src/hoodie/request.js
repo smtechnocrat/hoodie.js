@@ -21,6 +21,12 @@
 var hoodiefyRequestErrorName = require('../utils/hoodiefy_request_error_name');
 var extend = require('extend');
 
+/**
+ * Description
+ * @method hoodieRequest
+ * @param {} hoodie
+ * @return
+ */
 function hoodieRequest(hoodie) {
   var $ajax = $.ajax;
 
@@ -35,6 +41,14 @@ function hoodieRequest(hoodie) {
   //
   //     promise = hoodie.request('GET', '/user_database/doc_id')
   //
+  /**
+   * Description
+   * @method request
+   * @param {} type
+   * @param {} url
+   * @param {} options
+   * @return pipedPromise
+   */
   function request(type, url, options) {
     var defaults, requestPromise, pipedPromise;
 
@@ -79,6 +93,12 @@ function hoodieRequest(hoodie) {
   //
   //
   //
+  /**
+   * Description
+   * @method handleRequestError
+   * @param {} xhr
+   * @return CallExpression
+   */
   function handleRequestError(xhr) {
     var error;
 
@@ -112,6 +132,12 @@ function hoodieRequest(hoodie) {
   // https://github.com/apache/couchdb/blob/master/src/couchdb/couch_httpd.erl#L807
   //
 
+  /**
+   * Description
+   * @method parseErrorFromResponse
+   * @param {} xhr
+   * @return error
+   */
   function parseErrorFromResponse(xhr) {
     var error = JSON.parse(xhr.responseText);
 
@@ -151,3 +177,4 @@ function hoodieRequest(hoodie) {
 }
 
 module.exports = hoodieRequest;
+

@@ -1,6 +1,12 @@
 // Karma configuration
 // Generated on Mon Aug 12 2013 11:39:58 GMT+0100 (BST)
 
+/**
+ * Description
+ * @method exports
+ * @param {} config
+ * @return 
+ */
 module.exports = function(config) {
   config.set({
 

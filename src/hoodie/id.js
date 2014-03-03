@@ -5,9 +5,20 @@ var generateId = require('../utils/generate_id');
 
 // generates a random id and persists using hoodie.config
 // until the user signs out or deletes local data
+/**
+ * Description
+ * @method hoodieId
+ * @param {} hoodie
+ * @return
+ */
 function hoodieId (hoodie) {
   var id;
 
+  /**
+   * Description
+   * @method getId
+   * @return id
+   */
   function getId() {
     if (! id) {
       setId( generateId() );
@@ -15,12 +26,23 @@ function hoodieId (hoodie) {
     return id;
   }
 
+  /**
+   * Description
+   * @method setId
+   * @param {} newId
+   * @return
+   */
   function setId(newId) {
     id = newId;
-    
+
     hoodie.config.set('_hoodieId', newId);
   }
 
+  /**
+   * Description
+   * @method unsetId
+   * @return
+   */
   function unsetId () {
     id = undefined;
     hoodie.config.unset('_hoodieId');
@@ -29,6 +51,11 @@ function hoodieId (hoodie) {
   //
   // initialize
   //
+  /**
+   * Description
+   * @method init
+   * @return
+   */
   function init() {
     id = hoodie.config.get('_hoodieId');
 
@@ -39,6 +66,11 @@ function hoodieId (hoodie) {
   }
 
   // allow to run init only once from outside
+  /**
+   * Description
+   * @method init
+   * @return
+   */
   getId.init = function() {
     init();
     delete getId.init;
@@ -47,6 +79,11 @@ function hoodieId (hoodie) {
   //
   // subscribe to events coming from other modules
   //
+  /**
+   * Description
+   * @method subscribeToOutsideEvents
+   * @return
+   */
   function subscribeToOutsideEvents() {
     hoodie.on('account:cleanup', unsetId);
     hoodie.on('account:signin', function(username, hoodieId) {
@@ -55,6 +92,11 @@ function hoodieId (hoodie) {
   }
 
   // allow to run this only once from outside
+  /**
+   * Description
+   * @method subscribeToOutsideEvents
+   * @return
+   */
   getId.subscribeToOutsideEvents = function() {
     subscribeToOutsideEvents();
     delete getId.subscribeToOutsideEvents;
@@ -67,3 +109,4 @@ function hoodieId (hoodie) {
 }
 
 module.exports = hoodieId;
+

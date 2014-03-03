@@ -44,6 +44,13 @@ var resolveWith = require('../../utils/promise/resolve_with');
 var isPromise = require('../../utils/promise/is_promise');
 
 //
+/**
+ * Description
+ * @method hoodieStoreApi
+ * @param {} hoodie
+ * @param {} options
+ * @return api
+ */
 function hoodieStoreApi(hoodie, options) {
 
   // persistance logic
@@ -60,6 +67,13 @@ function hoodieStoreApi(hoodie, options) {
   var storeName = options.name || 'store';
 
   // public API
+  /**
+   * Description
+   * @method api
+   * @param {} type
+   * @param {} id
+   * @return CallExpression
+   */
   var api = function api(type, id) {
     var scopedOptions = extend(true, {
       type: type,
@@ -88,6 +102,12 @@ function hoodieStoreApi(hoodie, options) {
   api.validate = options.validate;
 
   if (!options.validate) {
+    /**
+     * Description
+     * @method validate
+     * @param {} object
+     * @return
+     */
     api.validate = function(object /*, options */ ) {
 
       if (!object) {
@@ -132,6 +152,15 @@ function hoodieStoreApi(hoodie, options) {
   //     store.save('car', undefined, {color: 'red'})
   //     store.save('car', 'abc4567', {color: 'red'})
   //
+  /**
+   * Description
+   * @method save
+   * @param {} type
+   * @param {} id
+   * @param {} properties
+   * @param {} options
+   * @return CallExpression
+   */
   api.save = function save(type, id, properties, options) {
 
     if (options) {
@@ -163,6 +192,14 @@ function hoodieStoreApi(hoodie, options) {
   // `.add` is an alias for `.save`, with the difference that there is no id argument.
   // Internally it simply calls `.save(type, undefined, object).
   //
+  /**
+   * Description
+   * @method add
+   * @param {} type
+   * @param {} properties
+   * @param {} options
+   * @return CallExpression
+   */
   api.add = function add(type, properties, options) {
 
     if (properties === undefined) {
@@ -179,6 +216,13 @@ function hoodieStoreApi(hoodie, options) {
   // ------
 
   //
+  /**
+   * Description
+   * @method find
+   * @param {} type
+   * @param {} id
+   * @return CallExpression
+   */
   api.find = function find(type, id) {
 
     return decoratePromise(backend.find(type, id));
@@ -192,12 +236,25 @@ function hoodieStoreApi(hoodie, options) {
   // 2. If share could be found, return it
   // 3. If not, add one and return it.
   //
+  /**
+   * Description
+   * @method findOrAdd
+   * @param {} type
+   * @param {} id
+   * @param {} properties
+   * @return CallExpression
+   */
   api.findOrAdd = function findOrAdd(type, id, properties) {
 
     if (properties === null) {
       properties = {};
     }
 
+    /**
+     * Description
+     * @method handleNotFound
+     * @return CallExpression
+     */
     function handleNotFound() {
       var newProperties;
       newProperties = extend(true, {
@@ -219,6 +276,13 @@ function hoodieStoreApi(hoodie, options) {
   // returns all objects from store.
   // Can be optionally filtered by a type or a function
   //
+  /**
+   * Description
+   * @method findAll
+   * @param {} type
+   * @param {} options
+   * @return CallExpression
+   */
   api.findAll = function findAll(type, options) {
     return decoratePromise( backend.findAll(type, options) );
   };
@@ -238,8 +302,23 @@ function hoodieStoreApi(hoodie, options) {
   // hoodie.store.update('car', 'abc4567', {sold: true})
   // hoodie.store.update('car', 'abc4567', function(obj) { obj.sold = true })
   //
+  /**
+   * Description
+   * @method update
+   * @param {} type
+   * @param {} id
+   * @param {} objectUpdate
+   * @param {} options
+   * @return CallExpression
+   */
   api.update = function update(type, id, objectUpdate, options) {
 
+    /**
+     * Description
+     * @method handleFound
+     * @param {} currentObject
+     * @return CallExpression
+     */
     function handleFound(currentObject) {
       var changedProperties, newObj, value;
 
@@ -293,7 +372,21 @@ function hoodieStoreApi(hoodie, options) {
   // same as `.update()`, but in case the object cannot be found,
   // it gets created
   //
+  /**
+   * Description
+   * @method updateOrAdd
+   * @param {} type
+   * @param {} id
+   * @param {} objectUpdate
+   * @param {} options
+   * @return CallExpression
+   */
   api.updateOrAdd = function updateOrAdd(type, id, objectUpdate, options) {
+    /**
+     * Description
+     * @method handleNotFound
+     * @return CallExpression
+     */
     function handleNotFound() {
       var properties = extend(true, {}, objectUpdate, {
         id: id
@@ -318,6 +411,14 @@ function hoodieStoreApi(hoodie, options) {
   //
   // hoodie.store.updateAll()
   //
+  /**
+   * Description
+   * @method updateAll
+   * @param {} filterOrObjects
+   * @param {} objectUpdate
+   * @param {} options
+   * @return CallExpression
+   */
   api.updateAll = function updateAll(filterOrObjects, objectUpdate, options) {
     var promise;
 
@@ -373,6 +474,14 @@ function hoodieStoreApi(hoodie, options) {
   // when object has been synced before, mark it as deleted.
   // Otherwise remove it from Store.
   //
+  /**
+   * Description
+   * @method remove
+   * @param {} type
+   * @param {} id
+   * @param {} options
+   * @return CallExpression
+   */
   api.remove = function remove(type, id, options) {
     return decoratePromise(backend.remove(type, id, options || {}));
   };
@@ -383,6 +492,13 @@ function hoodieStoreApi(hoodie, options) {
 
   // Destroye all objects. Can be filtered by a type
   //
+  /**
+   * Description
+   * @method removeAll
+   * @param {} type
+   * @param {} options
+   * @return CallExpression
+   */
   api.removeAll = function removeAll(type, options) {
     return decoratePromise(backend.removeAll(type, options || {}));
   };
@@ -392,6 +508,12 @@ function hoodieStoreApi(hoodie, options) {
   // -------------------
 
   // extend promises returned by store.api
+  /**
+   * Description
+   * @method decoratePromises
+   * @param {} methods
+   * @return CallExpression
+   */
   api.decoratePromises = function decoratePromises(methods) {
     return extend(promiseApi, methods);
   };
@@ -424,6 +546,12 @@ function hoodieStoreApi(hoodie, options) {
   var validIdOrTypeRules = '/ not allowed';
 
   //
+  /**
+   * Description
+   * @method decoratePromise
+   * @param {} promise
+   * @return CallExpression
+   */
   function decoratePromise(promise) {
     return extend(promise, promiseApi);
   }
@@ -432,3 +560,4 @@ function hoodieStoreApi(hoodie, options) {
 }
 
 module.exports = hoodieStoreApi;
+

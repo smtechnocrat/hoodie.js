@@ -33,6 +33,12 @@ var errorMessageFindPropertyPattern = /\w+/;
 
 var extend = require('extend');
 
+/**
+ * Description
+ * @method HoodieError
+ * @param {} properties
+ * @return
+ */
 function HoodieError(properties) {
 
   // normalize arguments
